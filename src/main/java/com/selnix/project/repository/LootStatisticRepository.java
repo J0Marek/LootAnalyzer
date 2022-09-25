@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface LootStatisticRepository extends CrudRepository<LootStatistic, Integer> {
     @Query("SELECT s FROM LootStatistic s WHERE s.monster = :monster AND s.item = :item")
     Optional<LootStatistic> findByNameAndItem(@Param("monster") Monster monster, @Param("item") Item item);
-    
-    @Query("SELECT statistic FROM loot_statistic statistic WHERE monster = :monster")
+
+    @Query("SELECT statistic FROM LootStatistic statistic WHERE statistic.monster = :monster")
     List<LootStatistic> getLootStatisticsOfMonster(@Param("monster") Monster monster);
 }
