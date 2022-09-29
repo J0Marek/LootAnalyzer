@@ -19,6 +19,8 @@ public class LootStatisticService {
 
     private final LootStatisticRepository lootStatisticRepository;
 
+    private final MonsterService monsterService;
+
     public void createLootStatistic(Monster monster, Item item, int itemsDropped) {
         Optional<LootStatistic> lootStatisticOptional = lootStatisticRepository.findByNameAndItem(monster, item);
         LootStatistic stat;
@@ -40,10 +42,11 @@ public class LootStatisticService {
 
         List<ItemDropBean> itemDropBeanList = new ArrayList<>();
         for (LootStatistic lootStatistic : statisticsOfMonster) {
-            ItemDropBean itemDropBean = new ItemDropBean();
-            itemDropBean.setItem(lootStatistic.getItem());
-            itemDropBean.setDropAmount(lootStatistic.getItemsDropped());
-            itemDropBean.setDropPercentage((double) monster.getMonstersKilled() / lootStatistic.getItemsDropped());
+            Item item = lootStatistic.getItem();
+            int dropAmount = lootStatistic.getItemsDropped();
+            double dropPercentage = (double) monster.getMonstersKilled() / lootStatistic.getItemsDropped();
+            ItemDropBean itemDropBean = new ItemDropBean(item, dropAmount, dropPercentage);
+
             itemDropBeanList.add(itemDropBean);
         }
 
@@ -51,5 +54,13 @@ public class LootStatisticService {
         monsterStatisticBean.setMonster(monster);
         monsterStatisticBean.setItemDropBeanList(itemDropBeanList);
         return monsterStatisticBean;
+    }
+
+    public Optional<MonsterStatisticBean> getLootStatisticFromMonster(String monsterName) {
+        Optional<Monster> searchedMonster = monsterService.findMonsterByName(monsterName);
+        if (searchedMonster.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(getMonsterStatistic(searchedMonster.get()));
     }
 }

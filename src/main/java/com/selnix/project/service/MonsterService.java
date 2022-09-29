@@ -5,6 +5,8 @@ import com.selnix.project.repository.MonsterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 
@@ -17,5 +19,13 @@ public class MonsterService {
         monster.setName(name);
         monster.setMonstersKilled(kills);
         return monsterRepository.save(monster);
+    }
+
+    public void saveMonster(Monster monster) {
+        monsterRepository.save(monster);
+    }
+
+    public Optional<Monster> findMonsterByName(String monsterName) {
+        return monsterRepository.findByName(monsterName);
     }
 }

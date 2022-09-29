@@ -2,8 +2,6 @@ package com.selnix.project.service;
 
 import com.selnix.project.entity.Item;
 import com.selnix.project.entity.Monster;
-import com.selnix.project.repository.ItemRepository;
-import com.selnix.project.repository.MonsterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +14,7 @@ import java.util.Optional;
 public class LootService {
 
     private final ItemService itemService;
-    private final ItemRepository itemRepository;
     private final MonsterService monsterService;
-    private final MonsterRepository monsterRepository;
     private final LootStatisticService lootStatisticService;
 
     public void analyzeLoot(String lootMessage) {
@@ -36,7 +32,7 @@ public class LootService {
                     lootStatisticService.createLootStatistic(monster, entry.getKey(), entry.getValue());
                 }
                 monster.setMonstersKilled(monster.getMonstersKilled() + 1);
-                monsterRepository.save(monster);
+                monsterService.saveMonster(monster);
             }
         }
     }
@@ -68,7 +64,7 @@ public class LootService {
 
         monsterName = monsterName.substring(0, 1).toUpperCase() + monsterName.substring(1);
 
-        Optional<Monster> optionalMonster = monsterRepository.findByName(monsterName);
+        Optional<Monster> optionalMonster = monsterService.findMonsterByName(monsterName);
         if (optionalMonster.isEmpty()) {
             return monsterService.createMonster(monsterName, 0);
         }
@@ -111,7 +107,7 @@ public class LootService {
             //TODO https://www.studienkreis.de/englisch/substantive-unregelmaessige-pluralformen/
         }
 
-        Optional<Item> itemOptional = itemRepository.findByName(itemString);
+        Optional<Item> itemOptional = itemService.findItemByName(itemString);
         if (itemOptional.isEmpty()) {
             return itemService.createItem(itemString);
         }
@@ -119,7 +115,7 @@ public class LootService {
     }
 
     private Map<Item, Integer> getItemsFromLootLine(String itemsLine) {
-        Map<Item, Integer> lootList = new HashMap<Item, Integer>();
+        Map<Item, Integer> lootList = new HashMap<>();
         String[] itemArray = itemsLine.split(", ");
         for (String drop : itemArray) {
             Item item = getItem(drop);
