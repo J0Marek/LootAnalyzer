@@ -20,5 +20,5 @@ public class LootStatistic {
     @OneToOne
     Item item;
 
-    Integer itemsDropped;
+    Integer amountOfDroppedItems;
 }

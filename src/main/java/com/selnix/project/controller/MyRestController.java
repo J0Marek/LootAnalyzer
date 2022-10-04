@@ -1,8 +1,10 @@
 package com.selnix.project.controller;
 
 import com.selnix.project.bean.MonsterStatisticBean;
+import com.selnix.project.entity.Monster;
 import com.selnix.project.service.LootService;
 import com.selnix.project.service.LootStatisticService;
+import com.selnix.project.service.MonsterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ public class MyRestController {
 
     private final LootService lootService;
     private final LootStatisticService lootStatisticService;
+    private final MonsterService monsterService;
 
     @PostMapping("/statistic")
     public void addNewStatisticToDatabase(@RequestBody String lootLog) {
@@ -22,11 +25,11 @@ public class MyRestController {
     }
 
     @GetMapping("/statistic/{monster}")
-    public ResponseEntity<MonsterStatisticBean> getLootStatisticFromMonsters(@PathVariable String monsterName) {
-        Optional<MonsterStatisticBean> monsterStatisticBean = lootStatisticService.getLootStatisticFromMonster(monsterName);
-        if (monsterStatisticBean.isEmpty()) {
+    public ResponseEntity<MonsterStatisticBean> getLootStatisticFromMonsters(@PathVariable String monster) {
+        Optional<Monster> searchedMonster = monsterService.findMonsterByName(monster);
+        if (searchedMonster.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(monsterStatisticBean.get());
+        return ResponseEntity.ok(lootStatisticService.getMonsterStatisticBean(searchedMonster.get()));
     }
 }

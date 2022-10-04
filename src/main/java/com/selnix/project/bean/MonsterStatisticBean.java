@@ -8,5 +8,5 @@ import java.util.List;
 @Data
 public class MonsterStatisticBean {
     private Monster monster;
-    private List<ItemDropBean> itemDropBeanList;
+    private List<ItemStatisticBean> itemStatisticBeanList;
 }

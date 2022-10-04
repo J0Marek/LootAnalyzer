@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ItemDropBean {
+public class ItemStatisticBean {
     private Item item;
     private int dropAmount;
     private double dropPercentage;
